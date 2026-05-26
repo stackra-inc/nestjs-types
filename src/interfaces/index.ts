@@ -16,6 +16,7 @@ export * from './injectable.interface';
 export * from './microservices/nest-hybrid-application-options.interface';
 export * from './middleware';
 export * from './modules';
+export * from './nest-application-context-options.interface';
 export * from './nest-application-context.interface';
 export * from './nest-application-options.interface';
 export * from './nest-application.interface';
