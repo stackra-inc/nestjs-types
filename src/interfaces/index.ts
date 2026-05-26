@@ -15,6 +15,8 @@ export * from './http';
 export * from './injectable.interface';
 export * from './middleware';
 export * from './modules';
+export * from './nest-application-context-options.interface';
+export * from './nest-application-options.interface';
 export * from './scope-options.interface';
 export * from './shutdown-hooks-options.interface';
 export * from './type.interface';

@@ -1,5 +1,9 @@
 'use strict';
 
+// src/interfaces/nest-application-context-options.interface.ts
+var NestApplicationContextOptions = class {
+};
+
 // src/interfaces/scope-options.interface.ts
 var Scope = /* @__PURE__ */ ((Scope2) => {
   Scope2[Scope2["DEFAULT"] = 0] = "DEFAULT";
@@ -248,6 +252,7 @@ exports.KafkaHeaders = KafkaHeaders;
 exports.METHOD_METADATA = METHOD_METADATA;
 exports.MODULE_METADATA = MODULE_METADATA;
 exports.MODULE_PATH = MODULE_PATH;
+exports.NestApplicationContextOptions = NestApplicationContextOptions;
 exports.OPTIONAL_DEPS_METADATA = OPTIONAL_DEPS_METADATA;
 exports.OPTIONAL_PROPERTY_DEPS_METADATA = OPTIONAL_PROPERTY_DEPS_METADATA;
 exports.PARAMTYPES_METADATA = PARAMTYPES_METADATA;

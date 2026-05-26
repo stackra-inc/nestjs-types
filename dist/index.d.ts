@@ -1025,6 +1025,293 @@ interface NestModule {
 }
 
 /**
+ * NestApplicationContextOptions
+ *
+ * Copied from @nestjs/common source (packages/common/interfaces).
+ *
+ * @see https://github.com/nestjs/nest
+ * @publicApi
+ */
+/**
+ * Log level type from NestJS.
+ */
+type LogLevel = 'log' | 'error' | 'warn' | 'debug' | 'verbose' | 'fatal';
+/**
+ * Minimal LoggerService interface from NestJS.
+ */
+interface LoggerService {
+    log(message: any, ...optionalParams: any[]): any;
+    error(message: any, ...optionalParams: any[]): any;
+    warn(message: any, ...optionalParams: any[]): any;
+    debug?(message: any, ...optionalParams: any[]): any;
+    verbose?(message: any, ...optionalParams: any[]): any;
+    fatal?(message: any, ...optionalParams: any[]): any;
+    setLogLevels?(levels: LogLevel[]): any;
+}
+/**
+ * @publicApi
+ */
+declare class NestApplicationContextOptions {
+    /**
+     * Specifies the logger to use. Pass `false` to turn off logging.
+     */
+    logger?: LoggerService | LogLevel[] | false;
+    /**
+     * Whether to abort the process on Error. By default, the process is exited.
+     * Pass `false` to override the default behavior. If `false` is passed, Nest will not exit
+     * the application and instead will rethrow the exception.
+     * @default true
+     */
+    abortOnError?: boolean | undefined;
+    /**
+     * If enabled, logs will be buffered until the "Logger#flush" method is called.
+     * @default false
+     */
+    bufferLogs?: boolean;
+    /**
+     * If enabled, logs will be automatically flushed and buffer detached when
+     * application initialization process either completes or fails.
+     * @default true
+     */
+    autoFlushLogs?: boolean;
+    /**
+     * Whether to run application in the preview mode.
+     * In the preview mode, providers/controllers are not instantiated & resolved.
+     *
+     * @default false
+     */
+    preview?: boolean;
+    /**
+     * Whether to generate a serialized graph snapshot.
+     *
+     * @default false
+     */
+    snapshot?: boolean;
+    /**
+     * Determines what algorithm use to generate module ids.
+     * When set to `deep-hash`, the module id is generated based on the serialized module definition.
+     * When set to `reference`, each module obtains a unique id based on its reference.
+     *
+     * @default 'reference'
+     */
+    moduleIdGeneratorAlgorithm?: 'deep-hash' | 'reference';
+    /**
+     * Instrument the application context.
+     */
+    instrument?: {
+        /**
+         * Function that decorates each instance created by the application context.
+         */
+        instanceDecorator: (instance: unknown) => unknown;
+    };
+    /**
+     * If enabled, will force the use of console.log/console.error instead of process.stdout/stderr.write.
+     * @default false
+     */
+    forceConsole?: boolean;
+}
+
+type StaticOrigin = boolean | string | RegExp | (string | RegExp)[];
+/**
+ * Set origin to a function implementing some custom logic. The function takes the
+ * request origin as the first parameter and a callback (which expects the signature
+ * err [object], allow [bool]) as the second.
+ *
+ * @see https://github.com/expressjs/cors
+ *
+ * @publicApi
+ */
+type CustomOrigin = (requestOrigin: string | undefined, callback: (err: Error | null, origin?: StaticOrigin) => void) => void;
+/**
+ * Interface describing CORS options that can be set.
+ *
+ * @see https://github.com/expressjs/cors
+ * @publicApi
+ */
+interface CorsOptions {
+    /**
+     * Configures the `Access-Control-Allow-Origins` CORS header.  See [here for more detail.](https://github.com/expressjs/cors#configuration-options)
+     */
+    origin?: StaticOrigin | CustomOrigin;
+    /**
+     * Configures the Access-Control-Allow-Methods CORS header.
+     */
+    methods?: string | string[];
+    /**
+     * Configures the Access-Control-Allow-Headers CORS header.
+     */
+    allowedHeaders?: string | string[];
+    /**
+     * Configures the Access-Control-Expose-Headers CORS header.
+     */
+    exposedHeaders?: string | string[];
+    /**
+     * Configures the Access-Control-Allow-Credentials CORS header.
+     */
+    credentials?: boolean;
+    /**
+     * Configures the Access-Control-Max-Age CORS header.
+     */
+    maxAge?: number;
+    /**
+     * Whether to pass the CORS preflight response to the next handler.
+     */
+    preflightContinue?: boolean;
+    /**
+     * Provides a status code to use for successful OPTIONS requests.
+     */
+    optionsSuccessStatus?: number;
+}
+interface CorsOptionsCallback {
+    (error: Error | null, options: CorsOptions): void;
+}
+interface CorsOptionsDelegate<T> {
+    (req: T, cb: CorsOptionsCallback): void;
+}
+
+/**
+ * Interface describing Https Options that can be set.
+ *
+ * @see https://nodejs.org/api/tls.html
+ *
+ * @publicApi
+ */
+interface HttpsOptions {
+    /**
+     * PFX or PKCS12 encoded private key and certificate chain. pfx is an alternative
+     * to providing key and cert individually. PFX is usually encrypted, if it is,
+     * passphrase will be used to decrypt it. Multiple PFX can be provided either
+     * as an array of unencrypted PFX buffers, or an array of objects in the form
+     * {buf: <string|buffer>[, passphrase: <string>]}. The object form can only
+     * occur in an array. object.passphrase is optional. Encrypted PFX will be decrypted
+     * with object.passphrase if provided, or options.passphrase if it is not.
+     */
+    pfx?: any;
+    /**
+     * Private keys in PEM format. PEM allows the option of private keys being encrypted.
+     * Encrypted keys will be decrypted with options.passphrase. Multiple keys using
+     * different algorithms can be provided either as an array of unencrypted key
+     * strings or buffers, or an array of objects in the form {pem: <string|buffer>[, passphrase: <string>]}.
+     * The object form can only occur in an array. object.passphrase is optional.
+     * Encrypted keys will be decrypted with object.passphrase if provided, or options.passphrase
+     * if it is not
+     */
+    key?: any;
+    /**
+     * Shared passphrase used for a single private key and/or a PFX.
+     */
+    passphrase?: string;
+    /**
+     * Cert chains in PEM format. One cert chain should be provided per private key.
+     * Each cert chain should consist of the PEM formatted certificate for a provided
+     * private key, followed by the PEM formatted intermediate certificates (if any),
+     * in order, and not including the root CA (the root CA must be pre-known to the
+     * peer, see ca). When providing multiple cert chains, they do not have to be
+     * in the same order as their private keys in key. If the intermediate certificates
+     * are not provided, the peer will not be able to validate the certificate, and
+     * the handshake will fail.
+     */
+    cert?: any;
+    /**
+     * Optionally override the trusted CA certificates. Default is to trust the well-known
+     * CAs curated by Mozilla. Mozilla's CAs are completely replaced when CAs are
+     * explicitly specified using this option. The value can be a string or Buffer,
+     * or an Array of strings and/or Buffers. Any string or Buffer can contain multiple
+     * PEM CAs concatenated together. The peer's certificate must be chainable to
+     * a CA trusted by the server for the connection to be authenticated. When using
+     * certificates that are not chainable to a well-known CA, the certificate's CA
+     * must be explicitly specified as a trusted or the connection will fail to authenticate.
+     * If the peer uses a certificate that doesn't match or chain to one of the default
+     * CAs, use the ca option to provide a CA certificate that the peer's certificate
+     * can match or chain to. For self-signed certificates, the certificate is its
+     * own CA, and must be provided. For PEM encoded certificates, supported types
+     * are "TRUSTED CERTIFICATE", "X509 CERTIFICATE", and "CERTIFICATE". See also tls.rootCertificates.
+     */
+    ca?: any;
+    /**
+     * PEM formatted CRLs (Certificate Revocation Lists).
+     */
+    crl?: any;
+    /**
+     * Cipher suite specification, replacing the default. For more information, see
+     * modifying the default cipher suite. Permitted ciphers can be obtained via tls.getCiphers().
+     * Cipher names must be uppercased in order for OpenSSL to accept them.
+     */
+    ciphers?: string;
+    /**
+     * Attempt to use the server's cipher suite preferences instead of the client's.
+     * When true, causes SSL_OP_CIPHER_SERVER_PREFERENCE to be set in secureOptions,
+     * see OpenSSL Options for more information.
+     */
+    honorCipherOrder?: boolean;
+    /**
+     * If true the server will request a certificate from clients that connect and
+     * attempt to verify that certificate. Default: false.
+     */
+    requestCert?: boolean;
+    /**
+     * If not false the server will reject any connection which is not authorized
+     * with the list of supplied CAs. This option only has an effect if requestCert is true. Default: true
+     */
+    rejectUnauthorized?: boolean;
+    /**
+     * An array or Buffer of possible NPN protocols. (Protocols should be ordered
+     * by their priority).
+     */
+    NPNProtocols?: any;
+    /**
+     * A function that will be called if the client supports SNI TLS extension. Two
+     * arguments will be passed when called: servername and cb. SNICallback should
+     * invoke cb(null, ctx), where ctx is a SecureContext instance. (tls.createSecureContext(...)
+     * can be used to get a proper SecureContext.) If SNICallback wasn't provided
+     * the default callback with high-level API will be used.
+     */
+    SNICallback?: (servername: string, cb: (err: Error, ctx: any) => any) => any;
+    /**
+     * Optionally affect the OpenSSL protocol behavior, which is not usually necessary.
+     * This should be used carefully if at all! Value is a numeric bitmask of the SSL_OP_* options
+     * from OpenSSL Options.
+     */
+    secureOptions?: number;
+}
+
+/**
+ * NestApplicationOptions
+ *
+ * Copied from @nestjs/common source (packages/common/interfaces).
+ *
+ * @see https://github.com/nestjs/nest
+ * @publicApi
+ */
+
+/**
+ * @publicApi
+ */
+interface NestApplicationOptions extends NestApplicationContextOptions {
+    /**
+     * CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)
+     */
+    cors?: boolean | CorsOptions | CorsOptionsDelegate<any>;
+    /**
+     * Whether to use underlying platform body parser.
+     */
+    bodyParser?: boolean;
+    /**
+     * Set of configurable HTTPS options
+     */
+    httpsOptions?: HttpsOptions;
+    /**
+     * Whether to register the raw request body on the request. Use `req.rawBody`.
+     */
+    rawBody?: boolean;
+    /**
+     * Force close open HTTP connections. Useful if restarting your application hangs due to
+     * keep-alive connections in the HTTP adapter.
+     */
+    forceCloseConnections?: boolean;
+}
+
+/**
  * Options for configuring shutdown hooks behavior.
  *
  * @publicApi
@@ -1108,4 +1395,4 @@ declare const CONTROLLER_WATERMARK = "__controller__";
 declare const CATCH_WATERMARK = "__catch__";
 declare const ENTRY_PROVIDER_WATERMARK = "__entryProvider__";
 
-export { type Abstract, type ArgumentMetadata, type ArgumentsHost, type BeforeApplicationShutdown, CATCH_WATERMARK, CONTROLLER_WATERMARK, CUSTOM_ROUTE_ARGS_METADATA, type CallHandler, type CanActivate, type ClassProvider, type ContextType, type Controller, type ControllerMetadata, type CustomParamFactory, type CustomVersioningOptions, type DynamicModule, ENHANCER_KEY_TO_SUBTYPE_MAP, ENTRY_PROVIDER_WATERMARK, EXCEPTION_FILTERS_METADATA, type EnhancerSubtype, type ExceptionFilter, type ExceptionFilterMetadata, type ExecutionContext, type ExistingProvider, FILTER_CATCH_EXCEPTIONS, type FactoryProvider, type ForwardReference, GLOBAL_MODULE_METADATA, GUARDS_METADATA, type GlobalPrefixOptions, HEADERS_METADATA, HOST_METADATA, HTTP_CODE_METADATA, type HeaderVersioningOptions, type HttpArgumentsHost, type HttpExceptionBody, type HttpExceptionBodyMessage, type HttpRedirectResponse, HttpStatus, INJECTABLE_WATERMARK, INTERCEPTORS_METADATA, type Injectable, type InjectionToken, type IntrospectionResult, KafkaHeaders, METHOD_METADATA, MODULE_METADATA, MODULE_PATH, type MediaTypeVersioningOptions, type MessageEvent, type MiddlewareConfigProxy, type MiddlewareConfiguration, type MiddlewareConsumer, type ModuleMetadata, type NestInterceptor, type NestMiddleware, type NestModule, OPTIONAL_DEPS_METADATA, OPTIONAL_PROPERTY_DEPS_METADATA, type OnApplicationBootstrap, type OnApplicationShutdown, type OnModuleDestroy, type OnModuleInit, type OptionalFactoryDependency, PARAMTYPES_METADATA, PATH_METADATA, PIPES_METADATA, PROPERTY_DEPS_METADATA, type Paramtype, type PipeTransform, type Provider, REDIRECT_METADATA, RENDER_METADATA, RESPONSE_PASSTHROUGH_METADATA, ROUTE_ARGS_METADATA, type RawBodyRequest, RequestMethod, type RouteInfo, RouteParamtypes, type RpcArgumentsHost, type RpcExceptionFilter, type RpcExceptionFilterMetadata, SCOPE_OPTIONS_METADATA, SELF_DECLARED_DEPS_METADATA, SSE_METADATA, Scope, type ScopeOptions, type ShutdownHooksOptions, ShutdownSignal, type Transform, Transport, type Type, type UriVersioningOptions, VERSION_METADATA, VERSION_NEUTRAL, type ValidationError, type ValueProvider, type VersionOptions, type VersionValue, type VersioningOptions, VersioningType, type WebSocketAdapter, type WsArgumentsHost, type WsExceptionFilter, type WsMessageHandler };
+export { type Abstract, type ArgumentMetadata, type ArgumentsHost, type BeforeApplicationShutdown, CATCH_WATERMARK, CONTROLLER_WATERMARK, CUSTOM_ROUTE_ARGS_METADATA, type CallHandler, type CanActivate, type ClassProvider, type ContextType, type Controller, type ControllerMetadata, type CustomParamFactory, type CustomVersioningOptions, type DynamicModule, ENHANCER_KEY_TO_SUBTYPE_MAP, ENTRY_PROVIDER_WATERMARK, EXCEPTION_FILTERS_METADATA, type EnhancerSubtype, type ExceptionFilter, type ExceptionFilterMetadata, type ExecutionContext, type ExistingProvider, FILTER_CATCH_EXCEPTIONS, type FactoryProvider, type ForwardReference, GLOBAL_MODULE_METADATA, GUARDS_METADATA, type GlobalPrefixOptions, HEADERS_METADATA, HOST_METADATA, HTTP_CODE_METADATA, type HeaderVersioningOptions, type HttpArgumentsHost, type HttpExceptionBody, type HttpExceptionBodyMessage, type HttpRedirectResponse, HttpStatus, INJECTABLE_WATERMARK, INTERCEPTORS_METADATA, type Injectable, type InjectionToken, type IntrospectionResult, KafkaHeaders, type LogLevel, type LoggerService, METHOD_METADATA, MODULE_METADATA, MODULE_PATH, type MediaTypeVersioningOptions, type MessageEvent, type MiddlewareConfigProxy, type MiddlewareConfiguration, type MiddlewareConsumer, type ModuleMetadata, NestApplicationContextOptions, type NestApplicationOptions, type NestInterceptor, type NestMiddleware, type NestModule, OPTIONAL_DEPS_METADATA, OPTIONAL_PROPERTY_DEPS_METADATA, type OnApplicationBootstrap, type OnApplicationShutdown, type OnModuleDestroy, type OnModuleInit, type OptionalFactoryDependency, PARAMTYPES_METADATA, PATH_METADATA, PIPES_METADATA, PROPERTY_DEPS_METADATA, type Paramtype, type PipeTransform, type Provider, REDIRECT_METADATA, RENDER_METADATA, RESPONSE_PASSTHROUGH_METADATA, ROUTE_ARGS_METADATA, type RawBodyRequest, RequestMethod, type RouteInfo, RouteParamtypes, type RpcArgumentsHost, type RpcExceptionFilter, type RpcExceptionFilterMetadata, SCOPE_OPTIONS_METADATA, SELF_DECLARED_DEPS_METADATA, SSE_METADATA, Scope, type ScopeOptions, type ShutdownHooksOptions, ShutdownSignal, type Transform, Transport, type Type, type UriVersioningOptions, VERSION_METADATA, VERSION_NEUTRAL, type ValidationError, type ValueProvider, type VersionOptions, type VersionValue, type VersioningOptions, VersioningType, type WebSocketAdapter, type WsArgumentsHost, type WsExceptionFilter, type WsMessageHandler };
