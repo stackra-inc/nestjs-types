@@ -1,0 +1,35 @@
+{
+  "name": "@stackra/nestjs-types",
+  "version": "1.0.0",
+  "description": "NestJS interfaces, types, enums, and constants extracted from @nestjs/common, @nestjs/microservices, and @nestjs/websockets",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules/.cache"
+  },
+  "keywords": [
+    "nestjs",
+    "types",
+    "interfaces",
+    "enums",
+    "typescript"
+  ],
+  "author": "Stackra",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "catalog:"
+  }
+}
